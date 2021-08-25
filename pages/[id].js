@@ -4,18 +4,7 @@ import { BackspaceIcon } from "@heroicons/react/solid";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-const CharacterDetails = ({ character }) => {
-  const [death, setDeath] = useState("");
-
-  useEffect(() => {
-    axios
-      .get(`https://www.breakingbadapi.com/api/death?name=${character[0].name}`)
-      .then((res) => {
-        if (res.data.length > 0) {
-          setDeath(res.data[0].cause);
-        }
-      });
-  }, []);
+const CharacterDetails = ({ character, causeOfDeath, deathsCaused }) => {
   return (
     <div className="flex flex-col items-center justify-center">
       <h2 className="text-4xl font-semibold mb-3">
@@ -26,9 +15,14 @@ const CharacterDetails = ({ character }) => {
         <p>Actor: {character[0].portrayed}</p>
         <p>Birthday: {character[0].birthday}</p>
         <p>Status: {character[0].status}</p>
-        {death ? (
-          <p className="max-w-[200px]">Cause of Death: {death}</p>
+        {causeOfDeath.length > 0 ? (
+          <p className="max-w-[200px]">
+            Cause of Death: {causeOfDeath[0].cause}
+          </p>
         ) : null}
+        {deathsCaused.length > 0 && (
+          <p>Deaths caused: {deathsCaused[0].deathCount}</p>
+        )}
       </div>
       <Link href="/">
         <div className="flex justify-between w-[100px] items-center text-red-300 cursor-pointer">
@@ -44,14 +38,23 @@ export const getStaticProps = async ({ params }) => {
   const character = await axios
     .get(`https://www.breakingbadapi.com/api/characters/${id}`)
     .then((res) => res.data);
+
   const causeOfDeath = await axios
     .get(`https://www.breakingbadapi.com/api/death?name=${character[0].name}`)
     .then((res) => res.data);
+
+  const name = character[0].name.split(" ").join("+");
+
+  const deathsCaused = await axios
+    .get(`https://www.breakingbadapi.com/api/death-count?name=${name}`)
+    .then((res) => res.data);
+  console.log(deathsCaused);
 
   return {
     props: {
       character,
       causeOfDeath,
+      deathsCaused,
     },
   };
 };
@@ -63,7 +66,6 @@ export const getStaticPaths = async () => {
   const paths = characters.map((character) => {
     return { params: { id: `${character.char_id}` } };
   });
-  console.log(paths);
 
   return {
     paths,
