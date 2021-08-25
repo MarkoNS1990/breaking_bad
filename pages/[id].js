@@ -4,7 +4,7 @@ import { BackspaceIcon } from "@heroicons/react/solid";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-const id = ({ character }) => {
+const CharacterDetails = ({ character }) => {
   const [death, setDeath] = useState("");
 
   useEffect(() => {
@@ -71,4 +71,4 @@ export const getStaticPaths = async () => {
   };
 };
 
-export default id;
+export default CharacterDetails;
