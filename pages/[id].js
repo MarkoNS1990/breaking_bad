@@ -4,7 +4,12 @@ import { BackspaceIcon } from "@heroicons/react/solid";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-const CharacterDetails = ({ character, causeOfDeath, deathsCaused }) => {
+const CharacterDetails = ({
+  character,
+  causeOfDeath,
+  deathsCaused,
+  randomQuote,
+}) => {
   return (
     <div className="flex flex-col items-center justify-center">
       <h2 className="text-4xl font-semibold mb-3">
@@ -22,6 +27,11 @@ const CharacterDetails = ({ character, causeOfDeath, deathsCaused }) => {
         ) : null}
         {deathsCaused.length > 0 && (
           <p>Deaths caused: {deathsCaused[0].deathCount}</p>
+        )}
+        {randomQuote.length > 0 && (
+          <p className="max-w-[200px] font-medium">
+            Random Quote: "{randomQuote[0].quote}"
+          </p>
         )}
       </div>
       <Link href="/">
@@ -50,11 +60,17 @@ export const getStaticProps = async ({ params }) => {
     .then((res) => res.data);
   console.log(deathsCaused);
 
+  const randomQuote = await axios
+    .get(`https://www.breakingbadapi.com/api/quote/random?author=${name}`)
+    .then((res) => res.data);
+  console.log(randomQuote);
+
   return {
     props: {
       character,
       causeOfDeath,
       deathsCaused,
+      randomQuote,
     },
   };
 };
