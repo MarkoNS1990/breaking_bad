@@ -4,6 +4,7 @@ import { BackspaceIcon } from "@heroicons/react/solid";
 import Link from "next/link";
 
 const id = ({ character }) => {
+  console.log(character[0]);
   return (
     <div className="flex flex-col items-center justify-center">
       <h2 className="text-4xl font-semibold mb-3">
@@ -38,9 +39,17 @@ export const getStaticProps = async ({ params }) => {
 };
 
 export const getStaticPaths = async () => {
+  const characters = await axios
+    .get(`https://www.breakingbadapi.com/api/characters/`)
+    .then((res) => res.data);
+  const paths = characters.map((character) => {
+    return { params: { id: `${character.char_id}` } };
+  });
+  console.log(paths);
+
   return {
-    paths: [{ params: { id: "1" } }],
-    fallback: true,
+    paths,
+    fallback: false,
   };
 };
 
