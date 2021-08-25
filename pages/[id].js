@@ -30,7 +30,7 @@ const CharacterDetails = ({
         )}
         {randomQuote.length > 0 && (
           <p className="max-w-[200px] font-medium">
-            Random Quote: "{randomQuote[0].quote}"
+            Random Quote: &quot;{randomQuote[0].quote}&quot;
           </p>
         )}
       </div>
