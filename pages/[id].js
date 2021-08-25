@@ -2,9 +2,20 @@ import axios from "axios";
 import Image from "next/image";
 import { BackspaceIcon } from "@heroicons/react/solid";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const id = ({ character }) => {
-  console.log(character[0]);
+  const [death, setDeath] = useState("");
+
+  useEffect(() => {
+    axios
+      .get(`https://www.breakingbadapi.com/api/death?name=${character[0].name}`)
+      .then((res) => {
+        if (res.data.length > 0) {
+          setDeath(res.data[0].cause);
+        }
+      });
+  }, []);
   return (
     <div className="flex flex-col items-center justify-center">
       <h2 className="text-4xl font-semibold mb-3">
@@ -15,6 +26,9 @@ const id = ({ character }) => {
         <p>Actor: {character[0].portrayed}</p>
         <p>Birthday: {character[0].birthday}</p>
         <p>Status: {character[0].status}</p>
+        {death ? (
+          <p className="max-w-[200px]">Cause of Death: {death}</p>
+        ) : null}
       </div>
       <Link href="/">
         <div className="flex justify-between w-[100px] items-center text-red-300 cursor-pointer">
@@ -30,10 +44,14 @@ export const getStaticProps = async ({ params }) => {
   const character = await axios
     .get(`https://www.breakingbadapi.com/api/characters/${id}`)
     .then((res) => res.data);
+  const causeOfDeath = await axios
+    .get(`https://www.breakingbadapi.com/api/death?name=${character[0].name}`)
+    .then((res) => res.data);
 
   return {
     props: {
       character,
+      causeOfDeath,
     },
   };
 };
