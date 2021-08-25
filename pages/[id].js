@@ -4,7 +4,6 @@ import { BackspaceIcon } from "@heroicons/react/solid";
 import Link from "next/link";
 
 const id = ({ character }) => {
-  console.log(character);
   return (
     <div className="flex flex-col items-center justify-center">
       <h2 className="text-4xl font-semibold mb-3">
