@@ -1,6 +1,7 @@
 import axios from "axios";
 import Head from "next/head";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home({ characters }) {
   return (
@@ -15,30 +16,34 @@ export default function Home({ characters }) {
         className="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-5"
       >
         {characters.map((char) => (
-          <div className=" rounded overflow-hidden shadow-lg" key={char.id}>
-            <div className="relative h-[400px]">
-              <Image
-                className="w-full"
-                src={char.img}
-                alt="Mountain"
-                layout="fill"
-                objectFit="contain"
-              />
-            </div>
+          <div
+            className=" rounded overflow-hidden shadow-lg cursor-pointer"
+            key={char.char_id}
+          >
+            <Link href={`/${char.char_id}`}>
+              <div className="relative h-[400px]">
+                <Image
+                  className="w-full"
+                  src={char.img}
+                  alt={char.name}
+                  layout="fill"
+                  objectFit="cover"
+                />
+              </div>
+            </Link>
             <div className="px-6 py-4">
               <div className="font-bold text-xl mb-2">{char.name}</div>
               <p className="text-gray-700 text-base">{char.nickname}</p>
             </div>
             <div className="px-6 pt-4 pb-2">
-              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                #photography
-              </span>
-              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                #travel
-              </span>
-              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                #winter
-              </span>
+              {char.occupation.map((occ) => (
+                <span
+                  className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                  key={Math.random() * 10000}
+                >
+                  {occ}
+                </span>
+              ))}
             </div>
           </div>
         ))}
